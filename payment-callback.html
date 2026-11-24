@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checking payment · Harvest POS</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="callback-card">
+    <span class="assistant-mark">H</span>
+    <h1 id="callbackTitle">Verifying payment</h1>
+    <p id="callbackMessage">Checking the transaction with Paystack. Keep this page open.</p>
+    <a class="btn btn-primary" href="./index.html">Return to POS</a>
+  </main>
+  <script>
+    (async function () {
+      const title=document.getElementById('callbackTitle');
+      const message=document.getElementById('callbackMessage');
+      const reference=new URLSearchParams(location.search).get('reference');
+      if(!reference){title.textContent='Payment reference missing';message.textContent='No transaction reference was returned. Check the payment in Sales History.';return}
+      try{
+        const response=await fetch(`/api/payments/verify?reference=${encodeURIComponent(reference)}`,{cache:'no-store'});
+        const result=await response.json();
+        if(!response.ok||!result.paid){title.textContent='Payment not confirmed';message.textContent='Paystack has not confirmed this payment. It remains pending; retry verification from Sales History.';return}
+        const key='harvest-pos-v2';
+        const state=JSON.parse(localStorage.getItem(key)||'null');
+        const sale=state?.sales?.find(s=>s.id===reference&&s.paymentStatus==='pending');
+        if(!sale||Math.round(Number(sale.total)*100)!==result.amount||result.currency!=='NGN'){
+          title.textContent='Payment needs review';message.textContent='Paystack reported a payment, but the local sale or amount did not match. Do not fulfill it until it is reconciled.';return
+        }
+        sale.paymentStatus='paid';sale.paymentConfirmedAt=new Date().toISOString();sale.paymentConfirmedBy='Paystack verification';
+        localStorage.setItem(key,JSON.stringify(state));
+        title.textContent='Payment confirmed';message.textContent=`${sale.payment} payment of ₦${Number(sale.total).toLocaleString('en-NG')} verified for sale ${sale.id}.`;
+      }catch{
+        title.textContent='Could not verify payment';message.textContent='The verification service could not be reached. The sale remains pending; check again from Sales History.';
+      }
+    })();
+  </script>
+</body>
+</html>

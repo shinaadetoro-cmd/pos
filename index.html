@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#183d32" />
+  <meta name="description" content="Harvest branch operations — good food, served well." />
+  <title>Harvest POS · Branch operations</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Harvest POS home"><span class="brand-mark">H</span><span><strong>harvest</strong><small>BRANCH OPERATIONS</small></span></a>
+      <div class="side-label">WORKSPACE</div>
+      <nav class="nav" aria-label="Main navigation">
+        <button class="nav-item active" data-view="overview"><span class="nav-icon">◫</span>Overview</button>
+        <button class="nav-item" data-view="checkout"><span class="nav-icon">＋</span>New sale</button>
+        <button class="nav-item" data-view="sales"><span class="nav-icon">▤</span>Sales history</button>
+        <button class="nav-item" data-view="products"><span class="nav-icon">▦</span>Products &amp; prices</button>
+        <button class="nav-item" data-view="branches"><span class="nav-icon">⌂</span>Branches</button>
+        <button class="nav-item" data-view="assistant"><span class="nav-icon">✳</span>Financial assistant</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sync-card"><span class="sync-dot" id="syncDot"></span><div><strong id="syncText">Browser-only mode</strong><small id="syncSub">Sales stay on this device</small></div><button class="icon-button" id="syncButton" title="Server sync is not configured" aria-label="Server sync status">↻</button></div>
+        <button class="profile" id="profileButton"><span class="avatar">AM</span><span class="profile-text"><strong id="userName">Adaeze M.</strong><small id="userRole">Branch Manager</small></span><span class="chevron">⌄</span></button>
+      </div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar"><div class="breadcrumb"><span>Workspace</span><span class="crumb-sep">/</span><strong id="pageCrumb">Overview</strong></div><div class="top-actions"><div class="network-pill" id="networkPill"><span class="network-dot"></span><span id="networkText">Online</span></div><button class="branch-switch" id="branchSwitch"><span class="branch-pin">⌖</span><span><small>ACTIVE BRANCH</small><strong id="activeBranchName">Lekki Phase 1</strong></span><span class="chevron">⌄</span></button></div></header>
+      <div id="viewRoot" class="view-root"></div>
+    </main>
+  </div>
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+  <dialog id="modal" class="modal"><div id="modalContent"></div></dialog>
+  <script src="app.js"></script>
+</body>
+</html>
